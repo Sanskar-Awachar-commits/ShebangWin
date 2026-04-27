@@ -74,7 +74,9 @@ void compile_file(const char *filename) {
 
     if (fgets(first_line, sizeof(first_line), file)) {
         char *cmd = remove_comments(first_line, prefix);
-        system(cmd);
+        char quoted_cmd[4100];
+        sprintf(quoted_cmd, "\"%s\"", cmd);
+        system(quoted_cmd);
     }
 
     fclose(file);
@@ -102,21 +104,43 @@ char* check_file(const char *filename) {
     return found_name;
 }
 
-int main(int argc, char *argv[]) {
-    // system("g++ -o main main.cpp");
-    // system("./main");
-    if (argc == 1) {
-        printf("Usage: compile <filename>\n");
+void help_option() {
+    printf("Usage: compile <filename>\n\n");
+    printf("Options:\n");
+    printf("  -h, --help     Show this help message\n");
+    printf("  -v, --version  Show version information\n");
+}
+
+void version_option() {
+    printf("v1.1.0");
+}
+
+void handle_options(char *option) {
+    if (_stricmp(option, "-h") == 0) help_option();
+    else if (_stricmp(option, "-help") == 0) help_option();
+    else if (_stricmp(option, "--help") == 0) help_option();
+    else if (_stricmp(option, "-v") == 0) version_option();
+    else if (_stricmp(option, "--version") == 0) version_option();
+    else {
+        printf("Error: Unrecognized option: '");
+        printf("%s", option);
+        printf("'");
     }
+}
+
+int main(int argc, char *argv[]) {
+    if (argc == 1) help_option();
     else if (argc > 2) {
         printf("Error: Too many arguments. Please provide only one file.\n");
     }
-    else {
-        char *filename = check_file(argv[1]);
-        if (filename) {
-            compile_file(filename);
-            free(filename);
-        }
+    if (argv[1][0] == '-') {
+        handle_options(argv[1]);
+        return 0;
+    }
+    char *filename = check_file(argv[1]);
+    if (filename) {
+        compile_file(filename);
+        free(filename);
     }
     return 0;
 }
