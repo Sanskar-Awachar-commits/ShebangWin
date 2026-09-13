@@ -69,10 +69,12 @@ compile main
 
 | Extension | Comment Prefix |
 | :--- | :--- |
-| `.c`, `.cpp`, `.java` | `//` |
-| `.py`, `.sh`, `.rb`, `.ps1` | `#` |
-| `.lua`, `.sql`, `.hs` | `--` |
-| `.bat` | `REM` |
+| `.c`, `.cpp`, `.cxx`, `.cc`, `.h`, `.hpp` | `//` |
+| `.rs`, `.go`, `.zig`, `.swift`, `.kt`, `.kts`, `.scala`, `.dart` | `//` |
+| `.java`, `.cs`, `.js`, `.mjs`, `.cjs`, `.ts`, `.jsx`, `.tsx`, `.php` | `//` |
+| `.py`, `.sh`, `.bash`, `.zsh`, `.rb`, `.r`, `.pl`, `.ps1`, `.yaml`, `.yml`, `.toml` | `#` |
+| `.lua`, `.sql`, `.hs`, `.ada` | `--` |
+| `.bat`, `.cmd` | `REM` |
 
 > **Note:** You can easily add more languages by updating the `SUPPORTED_LANGUAGES` array in `main.c`.
 

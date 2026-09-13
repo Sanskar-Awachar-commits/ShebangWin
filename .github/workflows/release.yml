@@ -1,0 +1,45 @@
+name: Build and Release
+on:
+  push:
+    branches:
+      - main
+    tags:
+      - 'v*'
+  pull_request:
+    branches:
+      - main
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  build:
+    name: Build & Release Executable
+    runs-on: windows-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Compile ShebangWin
+        run: |
+          gcc -O3 -s -o compile.exe main.c
+
+      - name: Verify build
+        run: |
+          .\compile.exe --version
+          .\compile.exe --help
+
+      - name: Upload Artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: compile-windows-x64
+          path: compile.exe
+
+      - name: Create GitHub Release
+        if: startsWith(github.ref, 'refs/tags/v')
+        uses: softprops/action-gh-release@v2
+        with:
+          files: compile.exe
+          generate_release_notes: true
